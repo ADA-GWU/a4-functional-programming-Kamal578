@@ -51,6 +51,12 @@ stack build                   # downloads GHC (first run) and compiles dependenc
 stack exec A4-currying-exe    # executes the curried REST request
 ```
 
+Run the integration tests (hits JSONPlaceholder, so requires an internet connection):
+
+```bash
+stack test
+```
+
 First execution prints the JSON response for `GET https://jsonplaceholder.typicode.com/posts/1`, e.g.
 
 ```json
@@ -79,5 +85,6 @@ This pattern mirrors currying/closures in other languages by keeping side effect
 ## Repository Layout
 - `src/Lib.hs` – curried REST builder that exposes `restClient`.
 - `app/Main.hs` – imports `restClient` and demonstrates issuing a request.
+- `test/Spec.hs` – Hspec tests verifying `/posts/1` and `/posts/2` responses.
 - `package.yaml` – Stack project definition plus `http-conduit`, `bytestring`, `text` dependencies.
 - `stack.yaml` / `stack.yaml.lock` – pinned resolver information for reproducible builds.

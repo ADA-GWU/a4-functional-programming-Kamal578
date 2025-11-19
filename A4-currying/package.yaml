@@ -21,6 +21,9 @@ description: Please see the README on GitHub at <https://github.com/githubuser/A
 
 dependencies:
   - base >= 4.7 && < 5
+  - http-conduit
+  - bytestring
+  - text
 
 ghc-options:
   - -Wall

@@ -1,2 +1,74 @@
+{-# LANGUAGE OverloadedStrings #-}
+
+module Main (main) where
+
+import Data.Aeson (FromJSON (parseJSON), eitherDecode, withObject, (.:))
+import qualified Data.ByteString.Lazy as LBS
+import Data.Text (Text)
+import Lib (restClient)
+import Test.Hspec
+
+data Post = Post
+    { postUserId :: Int
+    , postId :: Int
+    , postTitle :: Text
+    , postBody :: Text
+    }
+    deriving (Eq, Show)
+
+instance FromJSON Post where
+    parseJSON = withObject "Post" $ \v ->
+        Post <$> v .: "userId"
+             <*> v .: "id"
+             <*> v .: "title"
+             <*> v .: "body"
+
 main :: IO ()
-main = putStrLn "Test suite not yet implemented"
+main = hspec $
+    describe "restClient JSONPlaceholder integration" $ do
+        it "fetches the first post" $ do
+            post <- fetchPost 1
+            post `shouldBe` post1
+
+        it "fetches the second post" $ do
+            post <- fetchPost 2
+            post `shouldBe` post2
+
+fetchPost :: Int -> IO Post
+fetchPost n = do
+    response <- restClient "GET" baseUrl ("/posts/" ++ show n)
+    case decodePost response of
+        Left err -> expectationFailure ("Failed to decode JSON: " ++ err) >> fail err
+        Right post -> pure post
+
+decodePost :: LBS.ByteString -> Either String Post
+decodePost = eitherDecode
+
+baseUrl :: String
+baseUrl = "https://jsonplaceholder.typicode.com"
+
+post1 :: Post
+post1 =
+    Post
+        { postUserId = 1
+        , postId = 1
+        , postTitle = "sunt aut facere repellat provident occaecati excepturi optio reprehenderit"
+        , postBody =
+            "quia et suscipit\n\
+            \suscipit recusandae consequuntur expedita et cum\n\
+            \reprehenderit molestiae ut ut quas totam\n\
+            \nostrum rerum est autem sunt rem eveniet architecto"
+        }
+
+post2 :: Post
+post2 =
+    Post
+        { postUserId = 1
+        , postId = 2
+        , postTitle = "qui est esse"
+        , postBody =
+            "est rerum tempore vitae\n\
+            \sequi sint nihil reprehenderit dolor beatae ea dolores neque\n\
+            \fugiat blanditiis voluptate porro vel nihil molestiae ut reiciendis\n\
+            \qui aperiam non debitis possimus qui neque nisi nulla"
+        }

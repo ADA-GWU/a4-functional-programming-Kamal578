@@ -69,8 +69,10 @@ test-suite A4-currying-test
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       A4-currying
+    , aeson
     , base >=4.7 && <5
     , bytestring
+    , hspec
     , http-conduit
     , text
   default-language: Haskell2010

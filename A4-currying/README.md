@@ -3,10 +3,10 @@
 Functional programming assignment that builds a curried REST client in Haskell. Each stage of the client captures one part of the request (HTTP method → base URL → endpoint) and the final call performs the HTTP side effect in isolation.
 
 ## Functional Design
-- `restClient` in `app/Main.hs` is defined as three nested functions: `restClient "GET" "https://jsonplaceholder.typicode.com" "/posts/1"` progressively captures the method, host, and endpoint before issuing the request.
+- `restClient` lives in `src/Lib.hs` as three nested functions: `restClient "GET" "https://jsonplaceholder.typicode.com" "/posts/1"` progressively captures the method, host, and endpoint before issuing the request. `app/Main.hs` imports it and stays responsible only for performing the final IO action and printing the response.
 - The composed action uses `http-conduit` to create a TLS-enabled `Manager`, parse the full URL, override the HTTP method, and finally execute the request with `httpLbs`.
 - Optional parameters can be provided by including them in the endpoint string, e.g. `"/posts?userId=1"`; the curried structure keeps this logic in the pure portion of the code until the final IO action runs.
-- `Lib.hs` remains the default Stack stub and is unused; all logic lives in `app/Main.hs` to emphasize the functional composition.
+- `Main.hs` stays a thin executable that imports the curried builder and performs the IO action while printing the response.
 
 ## Prerequisites
 
@@ -77,10 +77,7 @@ response <- jsonPlaceholder "/comments?postId=1"
 This pattern mirrors currying/closures in other languages by keeping side effects at the outermost layer while the inner layers remain pure.
 
 ## Repository Layout
-- `app/Main.hs` – curried REST builder and demo call.
+- `src/Lib.hs` – curried REST builder that exposes `restClient`.
+- `app/Main.hs` – imports `restClient` and demonstrates issuing a request.
 - `package.yaml` – Stack project definition plus `http-conduit`, `bytestring`, `text` dependencies.
 - `stack.yaml` / `stack.yaml.lock` – pinned resolver information for reproducible builds.
-
-## Next Steps
-- Extend the third function to accept a record of optional parameters (headers, payload) before firing the request.
-- Move the builder into `src/` as a reusable module and add QuickCheck/HUnit coverage for the pure portions.

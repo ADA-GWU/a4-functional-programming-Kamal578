@@ -6,9 +6,9 @@ cabal-version: 2.2
 
 name:           A4-currying
 version:        0.1.0.0
-description:    Please see the README on GitHub at <https://github.com/githubuser/A4-currying#readme>
-homepage:       https://github.com/githubuser/A4-currying#readme
-bug-reports:    https://github.com/githubuser/A4-currying/issues
+description:    Please see the README on GitHub at <https://github.com/ADA-GWU/a4-functional-programming-Kamal578/tree/main/A4-currying#readme>
+homepage:       https://github.com/ADA-GWU/a4-functional-programming-Kamal578/tree/main/A4-currying#readme
+bug-reports:    https://github.com/ADA-GWU/a4-functional-programming-Kamal578/tree/main/A4-currying/issues
 author:         Author name here
 maintainer:     example@example.com
 copyright:      2025 Author name here
@@ -21,7 +21,7 @@ extra-source-files:
 
 source-repository head
   type: git
-  location: https://github.com/githubuser/A4-currying
+  location: https://github.com/ADA-GWU/a4-functional-programming-Kamal578/tree/main/A4-currying
 
 library
   exposed-modules:

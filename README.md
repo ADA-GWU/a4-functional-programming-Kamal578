@@ -22,9 +22,9 @@ rest_client("POST")("https://www.example.com")("users/")()
 Each step returns another function with the prior context baked in (method → host → path). The final invocation performs the HTTP action and can accept optional parameters (e.g., `id=123`, `name="Samir"`) that get serialized into the request.
 
 ### Repository Layout
-- `A4-currying/` – Haskell Stack project showcasing currying-based request composition.  
+- <a href="https://github.com/ADA-GWU/a4-functional-programming-Kamal578/tree/main/A4-currying">A4-currying/</a> – Haskell Stack project showcasing currying-based request composition.  
   Includes a curried `restClient`/`restClientWithBody` builder and JSONPlaceholder integration tests.
-- `A4-closures/` – Node.js version using closures to achieve the same progressive request building with Axios.
+- <a href="https://github.com/ADA-GWU/a4-functional-programming-Kamal578/tree/main/A4-closures">A4-closures/</a> – Node.js version using closures to achieve the same progressive request building with Axios.
 - `README.md` (this file) – assignment overview and submission notes.
 
 Execution instructions, dependencies, and test commands live inside each respective folder’s README. Follow those guides to install prerequisites, run the demo clients, and execute tests.

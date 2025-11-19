@@ -24,6 +24,9 @@ dependencies:
   - http-conduit
   - bytestring
   - text
+  - aeson
+  - http-types >=0.12.4
+  - http-client >=0.7.19
 
 ghc-options:
   - -Wall
@@ -61,4 +64,3 @@ tests:
     dependencies:
       - A4-currying
       - hspec
-      - aeson

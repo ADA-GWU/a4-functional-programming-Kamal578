@@ -2,10 +2,10 @@
 
 module Main (main) where
 
-import Data.Aeson (FromJSON (parseJSON), eitherDecode, withObject, (.:))
+import Data.Aeson (FromJSON (parseJSON), eitherDecode, encode, object, withObject, (.:), (.=))
 import qualified Data.ByteString.Lazy as LBS
 import Data.Text (Text)
-import Lib (restClient)
+import Lib (restClient, restClientWithBody)
 import Test.Hspec
 
 data Post = Post
@@ -34,9 +34,27 @@ main = hspec $
             post <- fetchPost 2
             post `shouldBe` post2
 
+        it "creates a post via POST request" $ do
+            post <- createPost
+            post `shouldBe` createdPost
+
 fetchPost :: Int -> IO Post
 fetchPost n = do
     response <- restClient "GET" baseUrl ("/posts/" ++ show n)
+    case decodePost response of
+        Left err -> expectationFailure ("Failed to decode JSON: " ++ err) >> fail err
+        Right post -> pure post
+
+createPost :: IO Post
+createPost = do
+    let payload =
+            encode $
+                object
+                    [ "title" .= ("ASP Assignment" :: String)
+                    , "body" .= ("Functional Programming (Currying)" :: String)
+                    , "userId" .= (1 :: Int)
+                    ]
+    response <- restClientWithBody "POST" baseUrl "/posts" (Just payload)
     case decodePost response of
         Left err -> expectationFailure ("Failed to decode JSON: " ++ err) >> fail err
         Right post -> pure post
@@ -71,4 +89,13 @@ post2 =
             \sequi sint nihil reprehenderit dolor beatae ea dolores neque\n\
             \fugiat blanditiis voluptate porro vel nihil molestiae ut reiciendis\n\
             \qui aperiam non debitis possimus qui neque nisi nulla"
+        }
+
+createdPost :: Post
+createdPost =
+    Post
+        { postUserId = 1
+        , postId = 101
+        , postTitle = "ASP Assignment"
+        , postBody = "Functional Programming (Currying)"
         }

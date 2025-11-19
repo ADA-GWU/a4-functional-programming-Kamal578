@@ -3,10 +3,9 @@
 Functional programming assignment that builds a curried REST client in Haskell. Each stage of the client captures one part of the request (HTTP method → base URL → endpoint) and the final call performs the HTTP side effect in isolation.
 
 ## Functional Design
-- `restClient` lives in `src/Lib.hs` as three nested functions: `restClient "GET" "https://jsonplaceholder.typicode.com" "/posts/1"` progressively captures the method, host, and endpoint before issuing the request. `app/Main.hs` imports it and stays responsible only for performing the final IO action and printing the response.
+- `restClient` lives in `src/Lib.hs` as three nested functions: `restClient "GET" "https://jsonplaceholder.typicode.com" "/posts/1"` progressively captures the method, host, and endpoint before issuing the request, while `restClientWithBody` extends the chain to optionally accept a JSON payload (used for POST/PUT just like the JavaScript implementation). `app/Main.hs` imports these builders and keeps IO + printing isolated.
 - The composed action uses `http-conduit` to create a TLS-enabled `Manager`, parse the full URL, override the HTTP method, and finally execute the request with `httpLbs`.
 - Optional parameters can be provided by including them in the endpoint string, e.g. `"/posts?userId=1"`; the curried structure keeps this logic in the pure portion of the code until the final IO action runs.
-- `Main.hs` stays a thin executable that imports the curried builder and performs the IO action while printing the response.
 
 ## Prerequisites
 
@@ -43,7 +42,7 @@ stack ghc -- --version                    # verifies GHC is installed
 stack setup                             # installs GHC if not already present
 ```
 
-Then, build and run the curried REST client:
+Then, build and run the curried REST client (prints both the GET `/posts/1` response and the POST `/posts` JSON response):
 
 ```bash
 # From the project root (A4-currying)
@@ -83,8 +82,8 @@ response <- jsonPlaceholder "/comments?postId=1"
 This pattern mirrors currying/closures in other languages by keeping side effects at the outermost layer while the inner layers remain pure.
 
 ## Repository Layout
-- `src/Lib.hs` – curried REST builder that exposes `restClient`.
-- `app/Main.hs` – imports `restClient` and demonstrates issuing a request.
-- `test/Spec.hs` – Hspec tests verifying `/posts/1` and `/posts/2` responses.
+- `src/Lib.hs` – curried REST builder that exposes `restClient` and `restClientWithBody`.
+- `app/Main.hs` – imports the builders and demonstrates GET `/posts/1` plus POST `/posts`.
+- `test/Spec.hs` – Hspec tests verifying `/posts/1`, `/posts/2`, and the POST payload/response.
 - `package.yaml` – Stack project definition plus `http-conduit`, `bytestring`, `text` dependencies.
 - `stack.yaml` / `stack.yaml.lock` – pinned resolver information for reproducible builds.

@@ -5,7 +5,8 @@ Each call captures the HTTP method → base URL → endpoint and returns a funct
 
 ### Project Layout
 - `restClient.js` – curried/closure-based builder that wraps Axios.
-- `index.js` – demo script showing both `GET /posts/1` and `POST /posts` calls against JSONPlaceholder.
+- `index.js` – demo script showing `GET /posts/1`, `POST /posts`, `PUT /posts/1`, and `DELETE /posts/1` against JSONPlaceholder.
+- `tests/restClient.test.js` – `node:test` suite that exercises all four HTTP methods.
 - `package.json` / `package-lock.json` – Node dependencies (`axios`) and scripts.
 
 ### Prerequisites
@@ -22,9 +23,18 @@ npm install
 node index.js
 ```
 
-You should see console output for:
+You will see sequential console output for:
 - GET request returning the `/posts/1` JSON object.
-- POST request that sends `{ title: "ASP Assignment", body: "Functional Programming (Closures)", userId: 1 }` and prints the mocked JSONPlaceholder response.
+- POST request that sends `{ title: "ASP Assignment", body: "Functional Programming (Closures)", userId: 1 }` and prints the mocked response.
+- PUT request updating `/posts/1` with a new title/body.
+- DELETE request against `/posts/1`, which returns `{}` from JSONPlaceholder.
+
+### Run the Tests
+```bash
+npm test
+```
+
+The `node --test` suite makes live requests to JSONPlaceholder and asserts that GET, POST, PUT, and DELETE all behave as expected. An internet connection is required.
 
 ### How It Works
 ```javascript
